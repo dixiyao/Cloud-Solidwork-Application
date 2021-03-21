@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Introduction01</title>
+<script>
+var f
+var k
+
+var sleep = function(time) {
+    var startTime = new Date().getTime() + parseInt(time, 10);
+    while(new Date().getTime() < startTime) {}
+};
+	
+function login_check(userid)
+{
+	//var ws = new ActiveXObject("WScript.Shell"); 
+	//ws.run("python3 /root/utils/login_check.py"+" "+userid);
+	document.getElementById("Feedback").value=userid;
+	<?php
+	$userid=userid;
+	exec("python3 /root/utils/login_check.py $userid");
+	}
+	?>
+	
+	sleep(1000)
+	var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+	var ts = fso.OpenTextFile("/root/tmp/tmp_login_check.txt", 1); 
+	var t = ts.ReadAll();
+	f = t;
+	console.log(f);
+}
+	
+function login_get(userid, password)
+{
+	var ws = new ActiveXObject("WScript.Shell"); 
+	ws.run("python3 /root/utils/login_get.py"+" "+userid+" "+password);
+	sleep(1000)
+	var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+	var ts = fso.OpenTextFile("/root/tmp/tmp_login_get.txt", 1); 
+	var t = ts.ReadAll();
+	k = t;
+}
+	
+function write_inf(userid)
+{
+	var ws = new ActiveXObject("WScript.Shell"); 
+	ws.run("python3 /root/utils/write_inf.py"+" "+userid);
+}
+
+function func()
+{
+	var userid = document.getElementById("User Id").value
+	var password = document.getElementById("Password").value
+	login_check(userid)
+	if (f == "0")
+		{
+			login_get(userid, password)
+			if (k == "1")
+				{
+					write_inf(userid)
+					window.location.href = "Main.html"
+				}
+			else
+				document.getElementById("Feedback").value = "Sorry, it seems that your password is wrong."
+		}
+	else
+		document.getElementById("Feedback").value = "Sorry, it seems that your User Id doesn't exist?"
+}
+</script>
+<style>
+input[type=text]:disabled {
+  background: #ffffff;
+}
+	#Feedback{width: 500px}
+</style>
+</head>
+	
+	
+<body>
+	<div style="font-size: 30px">Log In</div>
+	<nav>
+		<ul>
+			<li><a href="Login.html">Log In</a></li>
+			<li><a href="Register.html">Register</a></li>
+		</ul>
+	</nav>
+	UserId: <input type="text", id="User Id"><br>
+	Password: <input type="text", id="Password"><br>
+	<button onClick="func()">Log In</button><br>
+	<input type="text", id="Feedback", style="border:0px;", disabled>
+</body>
+</html>

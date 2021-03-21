@@ -1,0 +1,199 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Main</title>
+	<script>
+		var sleep = function(time) {
+			var startTime = new Date().getTime() + parseInt(time, 10);
+			while(new Date().getTime() < startTime) {}
+		};
+		
+		function exec1(command)
+		{
+			var ws = new ActiveXObject("WScript.Shell"); 
+			ws.run(command);
+		}
+		
+		function func()
+		{
+			window.location.href = "Login.html";
+		}
+		
+		function get_solidwork()
+		{
+			var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+			var ips = fso.OpenTextFile("/root/tmp/current_ip.txt", 1); 
+			var ip = ips.ReadAll();
+			
+			var acs = fso.OpenTextFile("/root/tmp/current_account.txt", 1); 
+			var ac = acs.ReadAll();
+			
+			if (ip == "Undefined")
+				{
+					var ws = new ActiveXObject("WScript.Shell"); 
+					console.log("working...");
+					ws.run("python3 /root/solidpy/create.py"+" "+ac)
+					sleep(40000)
+				}
+			
+			var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+			var ips = fso.OpenTextFile("/root/tmp/current_ip.txt", 1); 
+			var ip = ips.ReadAll();
+			
+			document.getElementById("return").value = ip
+		}
+		
+		function delete_solidwork()
+		{
+			var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+			var ips = fso.OpenTextFile("/root/tmp/current_ip.txt", 1); 
+			var ip = ips.ReadAll();
+			
+			var usrs = fso.OpenTextFile("/root/tmp/current_username.txt", 1); 
+			var usr = usrs.ReadAll();
+			
+			var acs = fso.OpenTextFile("/root/tmp/current_account.txt", 1); 
+			var ac = acs.ReadAll();
+			
+			if (ip != "Undefined")
+				{
+					var ws = new ActiveXObject("WScript.Shell"); 
+					ws.run("python3 /root/solidpy/delete.py"+" "+usr+" "+ip);
+					ws.run("python3 /root/utils/refresh_inf.py");
+				}
+			
+			document.getElementById("return").value = "Deleted"
+		}
+		
+		function open_solidwork()
+		{
+			var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+			var ips = fso.OpenTextFile("/root/tmp/current_ip.txt", 1); 
+			var ip = ips.ReadAll();
+			
+			var usrs = fso.OpenTextFile("/root/tmp/current_username.txt", 1); 
+			var usr = usrs.ReadAll();
+			
+			if (ip != "Undefined")
+				{
+					var ws = new ActiveXObject("WScript.Shell"); 
+					ws.run("python3 /root/solidpy/open.py"+" "+usr);
+					document.getElementById("Feedback").value = ""
+				}
+			else
+				document.getElementById("Feedback").value = "It seems that you have not created a solidwork yet."
+		}
+		
+		function close_solidwork()
+		{
+			var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+			var ips = fso.OpenTextFile("/root/tmp/current_ip.txt", 1); 
+			var ip = ips.ReadAll();
+			
+			var usrs = fso.OpenTextFile("/root/tmp/current_username.txt", 1); 
+			var usr = usrs.ReadAll();
+			
+			if (ip != "Undefined")
+				{
+					var ws = new ActiveXObject("WScript.Shell"); 
+					ws.run("python3 /root/solidpy/close.py"+" "+usr);
+					document.getElementById("Feedback").value = ""
+				}
+			else
+				document.getElementById("Feedback").value = "It seems that you have not created a solidwork yet."
+		}
+		
+		function soft_reboot()
+		{
+			var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+			var ips = fso.OpenTextFile("/root/tmp/current_ip.txt", 1); 
+			var ip = ips.ReadAll();
+			
+			var usrs = fso.OpenTextFile("/root/tmp/current_username.txt", 1); 
+			var usr = usrs.ReadAll();
+			
+			if (ip != "Undefined")
+				{
+					var ws = new ActiveXObject("WScript.Shell"); 
+					ws.run("python3 /root/solidpy/reboot_soft.py"+" "+usr);
+					document.getElementById("Feedback").value = ""
+				}
+			else
+				document.getElementById("Feedback").value = "It seems that you have not created a solidwork yet."
+		}
+		
+		function hard_reboot()
+		{
+			var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+			var ips = fso.OpenTextFile("/root/tmp/current_ip.txt", 1); 
+			var ip = ips.ReadAll();
+			
+			var usrs = fso.OpenTextFile("/root/tmp/current_username.txt", 1); 
+			var usr = usrs.ReadAll();
+			
+			if (ip != "Undefined")
+				{
+					var ws = new ActiveXObject("WScript.Shell"); 
+					ws.run("python3 /root/solidpy/reboot_hard.py"+" "+usr);
+					document.getElementById("Feedback").value = ""
+				}
+			else
+				document.getElementById("Feedback").value = "It seems that you have not created a solidwork yet."
+		}
+		
+		function change_password()
+		{
+			var new_password = prompt("Please Enter Your New Password (len >= 6):", "saicoro")
+			if (new_password.length >= 6)
+				{
+					var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+					var ips = fso.OpenTextFile("/root/tmp/current_ip.txt", 1); 
+					var ip = ips.ReadAll();
+
+					var usrs = fso.OpenTextFile("/root/tmp/current_username.txt", 1); 
+					var usr = usrs.ReadAll();
+					
+					if (ip != "Undefined")
+						{
+							var ws = new ActiveXObject("WScript.Shell"); 
+							ws.run("python3 /root/solidpy/change_password.py"+" "+usr+" " +new_password);
+							ws.run("python3 /root/utils/refresh_password.py"+" "+new_password);
+							document.getElementById("Feedback").value = "";
+						}
+					else
+						document.getElementById("Feedback").value = "It seems that you have not created a solidwork yet."
+				}
+			else
+				document.getElementById("Feedback").value = "It seems that your password is too short.(length<6)"
+		}
+	</script>
+<style>
+input[type=text]:disabled {
+  background: #ffffff;
+}
+	#Feedback{width: 500px}
+</style>
+</head>
+
+<body>
+	<div style="font-size: 30px">Get Your Solidwork</div>
+	<br>
+	Welcome to the world of Solidwork! Click "Get Solidwork" to start!
+	<br><br>
+	Your VM adress is: <input type="text", id="return", placeholder="VM address", disabled>
+	<br><div style="font-size: 18px">Service</div>
+	<button onClick="get_solidwork()">Get Solidwork</button>
+	<button onClick="delete_solidwork()">Delete Solidwork</button>
+	<br><br><div style="font-size: 18px">Control</div>
+	<button onClick="open_solidwork()">Open Solidwork</button>
+	<button onClick="close_solidwork()">Close Solidwork</button><br>
+	<button onClick="soft_reboot()">Soft Reboot</button>
+	<button onClick="hard_reboot()">Hard Reboot</button>
+	<br><br><div style="font-size: 18px">Password</div>
+	<button onClick="change_password()">Change Password (of your solidwork)</button>
+	<br><br>
+	<button onClick="func()">Back</button><br>
+	<input type="text", id="Feedback", style="border:0px;", disabled>
+</body>
+</html>

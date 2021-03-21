@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Register</title>
+<script>
+var f
+
+var sleep = function(time) {
+    var startTime = new Date().getTime() + parseInt(time, 10);
+    while(new Date().getTime() < startTime) {}
+};
+	
+function register_check(userid)
+{
+	var ws = new ActiveXObject("WScript.Shell"); 
+	ws.run("python3 /root/utils/register_check.py"+" "+userid);
+	sleep(1000)
+	var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+	var ts = fso.OpenTextFile("/root/tmp/tmp_register_check.txt", 1); 
+	var t = ts.ReadAll();
+	f = t;
+	console.log(f);
+}
+	
+function register_insert(userid, password)
+{
+	var ws = new ActiveXObject("WScript.Shell"); 
+	ws.run("python3 /root/utils/register_insert.py"+" "+userid+" "+password);
+	console.log(userid);
+}
+
+function func()
+{
+	var password = document.getElementById("Password").value
+	var confirm = document.getElementById("Confirm").value
+	var userid = document.getElementById("User Id").value
+	var feedback = document.getElementById("Feedback").value
+	if (password == confirm)
+		{
+			if (["CurrentUserId", "CurrentVMIP"].indexOf(userid) != -1)
+				document.getElementById("Feedback").value = "Sorry, this User Id is illegal, please try another Id."
+			else
+				{
+					if (userid.length<6||password.length<6)
+						document.getElementById("Feedback").value = 
+							"Sorry, your User Id or Password is too short.(length<6)"
+					else
+						{
+							register_check(userid)
+							if (f == "1")
+								{
+									register_insert(userid, password)
+									document.getElementById("Feedback").value = 
+										"Your account has been created, now get your Solidwork!"
+								}	
+							else
+								document.getElementById("Feedback").value = 
+									"Sorry, this User Id has already been registered."
+						}
+				}
+		}
+	else
+		{
+			document.getElementById("Feedback").value = 
+				"Error: Your Password should be same as your Confirmation."
+		}
+}
+</script>
+<style>
+input[type=text]:disabled {
+  background: #ffffff;
+}
+	#Feedback{width: 500px}
+</style>
+</head>
+	
+	
+<body>
+	<div style="font-size: 30px">Register</div>
+	<nav>
+		<ul>
+			<li><a href="Login.html">Log In</a></li>
+			<li><a href="Register.html">Register</a></li>
+		</ul>
+	</nav>
+	UserId: <input type="text", id="User Id", placeholder="Length >= 6"><br>
+	Password: <input type="text", id="Password", placeholder="Length >= 6"><br>
+	Confirm Password: <input type="text", id="Confirm"><br>
+	<button onClick="func()">Register</button><br>
+	<input type="text", id="Feedback", style="border:0px;", disabled>
+</body>
+</html>

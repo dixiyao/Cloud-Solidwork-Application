@@ -1,0 +1,9 @@
+python脚本位置 /root/solidpy/xxx
+命令行调用这些文件的运行语句是
+对于create函数直接 python3 create.py然后有个返回值要处理是地址
+	怎么把这个返回值读出来可能需要你修改下python代码，在python代码里面
+	就是main()里面的那个address
+对于change_password python3 change_password.py servername password
+其他的都是 python3 xxx.py servername
+
+另外在用户创建虚拟机以后立刻跳出弹窗，默认密码为123456，请输入新密码，然后调用脚本change_passwrod.py

@@ -1,0 +1,7 @@
+account,password,username,userpassword,ip
+User01,123456,Undefined,Undefined,Undefined
+Nagario,123456,Nagario,Unknown,10.119.5.192
+User05,useruseruser,VM02,Unknown,10.119.5.202
+UserKK,kkkkkk,wxw,Unknown,10.119.6.0
+SinCos,saicoro,SinCos,Unknown,10.119.5.250
+CrazySolidwork,saicoro,CrazySolidwork,supersaicoro,10.119.6.1
